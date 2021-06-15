@@ -18,6 +18,9 @@ function find() {
       }
     ]
    */
+  return db('users AS u')
+    .select('user_id', 'username', 'role_name')
+    .join('roles AS r', 'u.user_id', 'r.user_id')
 }
 
 function findBy(filter) {
@@ -34,6 +37,10 @@ function findBy(filter) {
       }
     ]
    */
+  return db('users AS u')
+    .select('user_id', 'username', 'password', 'role_name')
+    .join('roles AS r', 'u.user_id', 'r.user_id')
+    .where(filter)
 }
 
 function findById(user_id) {
@@ -47,6 +54,10 @@ function findById(user_id) {
       "role_name": "instructor"
     }
    */
+    return db('users AS u')
+      .select('user_id', 'username', 'role_name')
+      .join('roles AS r', 'u.user_id', 'r.user_id')
+      .where({ user_id })
 }
 
 /**
