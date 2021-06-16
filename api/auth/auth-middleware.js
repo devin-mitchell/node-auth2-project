@@ -7,7 +7,8 @@ const restricted = (req, res, next) => {
   if (token) {
    jwt.verify(token, JWT_SECRET, (err, decoded) => {
      if (err) {
-       res.status(401).json({
+       next({
+         status: 401,
          message: `Token invalid`
        })
      } else {
@@ -16,7 +17,8 @@ const restricted = (req, res, next) => {
      }
    })
  } else {
-   res.status(401).json({
+   next({
+     status: 401,
      message: 'Token required'
    })
   }
@@ -61,7 +63,7 @@ const only = role_name => (req, res, next) => {
 
 const checkUsernameExists = async (req, res, next) => {
   const { username } = req.body
-  const [user] = await Users.findBy({ username })
+  const user = await Users.findBy({ username })
   if (user) {
     req.user = user
     next()
@@ -87,7 +89,7 @@ const validateRoleName = async (req, res, next) => {
   if (!role_name || role_name.trim() === '') {
     req.role_name = 'student'
     next()
-  } else if(role_name === 'admin') {  
+  } else if(role_name.trim() === 'admin') {  
     next({
       status: 422,
       message: 'Role name can not be admin'
